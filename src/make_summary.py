@@ -18,7 +18,14 @@ Writes:
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+# The tables contain characters (>=, en dashes) outside the Windows console's
+# default cp1252 codepage. The file itself is always written as UTF-8; this
+# only stops the echo to stdout from raising.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "summary_table.md"
@@ -100,25 +107,49 @@ def main() -> None:
     add("The intent-discovery method scored against two standard benchmarks, "
         "using the same code path that built the OrderBuddy taxonomy.")
     add("")
-    add("| Benchmark | Rows | Gold intents | Clusters found | Intents recovered | Accuracy | ARI | NMI |")
-    add("|---|---:|---:|---:|---:|---:|---:|---:|")
+    add("Both criteria are reported side by side. They answer different "
+        "questions and neither is the whole truth.")
+    add("")
+    add("| Benchmark | Rows | Gold intents | Clusters | Recovered (strict) | Recovered (lenient) | Accuracy (strict) | Accuracy (lenient) | ARI | NMI |")
+    add("|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
     for key in ("banking77", "clinc150"):
         r = val["results"][key]
+        st, le = r["strict"], r["lenient"]
         add(
             f"| {key} | {r['n_rows']:,} | {r['n_gold_intents']} | "
-            f"{r['n_clusters_found']} | **{r['intent_recovery']}** | "
-            f"{pct(r['accuracy'])} | {r['ari']} | {r['nmi']} |"
+            f"{r['n_clusters_found']} | **{st['intent_recovery']}** | "
+            f"{le['intent_recovery_str']} | **{pct(st['accuracy'])}** | "
+            f"{pct(le['accuracy'])} | {r['ari']} | {r['nmi']} |"
         )
     add("")
-    add("Recovery rule: clusters matched one-to-one to gold intents by "
-        "Hungarian assignment; an intent counts as recovered at F1 ≥ 0.50. "
-        "Row accuracy counts HDBSCAN noise as incorrect.")
+    add(f"**Headline criterion: strict** (bold). {val['headline_rationale']}")
     add("")
 
-    add("### Recovery is definition-sensitive")
+    add("### The two criteria, precisely")
     add("")
-    add("\"How many intents were recovered\" has no single convention, and the "
-        "conventions disagree by a wide margin on identical clusterings:")
+    add(f"- **Strict (one-to-one).** {val['criterion_definitions']['strict']}")
+    add("")
+    add(f"- **Lenient (many-to-one plurality).** "
+        f"{val['criterion_definitions']['lenient']}")
+    add("")
+    add("The gap between them measures fragmentation — clusters pure enough to "
+        "take an intent's plurality, but too numerous to be that intent's "
+        "single one-to-one match:")
+    add("")
+    add("| Benchmark | Recovery gap | Accuracy gap | Clusters per recovered intent | Worst-split intent |")
+    add("|---|---:|---:|---:|---:|")
+    for key in ("banking77", "clinc150"):
+        r = val["results"][key]
+        g, le = r["criterion_gap"], r["lenient"]
+        add(
+            f"| {key} | +{g['recovery_delta']} intents | "
+            f"+{g['accuracy_delta'] * 100:.1f} pts | "
+            f"{le['mean_clusters_per_recovered_intent']} | "
+            f"{le['max_clusters_for_one_intent']} clusters |"
+        )
+    add("")
+
+    add("### Two further conventions, for context")
     add("")
     add("| Benchmark | Strict 1-to-1, F1≥0.50 | Strict 1-to-1, any overlap | Many-to-one plurality | Many-to-one, ≥50% pure | Cited on CV |")
     add("|---|---:|---:|---:|---:|---:|")
@@ -134,17 +165,26 @@ def main() -> None:
 
     # ---- Discovery --------------------------------------------------------
     d = disc["scores"]
+    dl = disc.get("scores_lenient", {})
     add("## Intent discovery (OrderBuddy corpus)")
     add("")
-    add(f"| Metric | Value |")
-    add(f"|---|---:|")
-    add(f"| Corpus | {disc['dataset']['n_rows']:,} messages |")
-    add(f"| Ground-truth intents | {disc['dataset']['n_gold_intents']} |")
-    add(f"| Clusters found | {disc['clustering']['n_clusters']} |")
-    add(f"| Intents recovered | **{d['intent_recovery_str']}** |")
-    add(f"| Row accuracy | {pct(d['accuracy'])} |")
-    add(f"| ARI / NMI | {d['ari']} / {d['nmi']} |")
-    add(f"| Noise (unclustered) | {pct(d['noise_fraction'])} |")
+    add("Same two criteria as the benchmarks above; strict is the headline.")
+    add("")
+    add("| Metric | Strict (1-to-1) | Lenient (m-to-1) |")
+    add("|---|---:|---:|")
+    add(f"| Corpus | {disc['dataset']['n_rows']:,} messages | |")
+    add(f"| Ground-truth intents | {disc['dataset']['n_gold_intents']} | |")
+    add(f"| Clusters found | {disc['clustering']['n_clusters']} | |")
+    add(f"| Intents recovered | **{d['intent_recovery_str']}** | "
+        f"{dl.get('intent_recovery_str', 'n/a')} |")
+    add(f"| Row accuracy | **{pct(d['accuracy'])}** | "
+        f"{pct(dl['accuracy']) if dl else 'n/a'} |")
+    add(f"| ARI / NMI | {d['ari']} / {d['nmi']} | |")
+    add(f"| Noise (unclustered) | {pct(d['noise_fraction'])} | |")
+    if dl:
+        add(f"| Clusters per recovered intent | | "
+            f"{dl['mean_clusters_per_recovered_intent']} "
+            f"(max {dl['max_clusters_for_one_intent']}) |")
     add("")
     if d["missed_intents"]:
         add(f"Intents not recovered: {', '.join(f'`{m}`' for m in d['missed_intents'])}.")

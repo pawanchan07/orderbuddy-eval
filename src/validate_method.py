@@ -40,6 +40,7 @@ from discovery import (
     min_cluster_size_for,
     recovery_variants,
     score_against_gold,
+    score_many_to_one,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,12 +78,19 @@ def evaluate(name: str, texts: list[str], gold: list[str]) -> dict:
 
     result = discover(texts, k_expected=k_true, cache_key=name)
     scores = score_against_gold(result.labels, gold)
+    lenient = score_many_to_one(result.labels, gold)
 
     print(f"  clusters found   : {result.n_clusters}")
-    print(f"  intents recovered: {scores['intent_recovery_str']}")
-    print(f"  accuracy         : {scores['accuracy']:.1%}")
     print(f"  ARI / NMI        : {scores['ari']:.3f} / {scores['nmi']:.3f}")
     print(f"  noise            : {scores['noise_fraction']:.1%}")
+    print(f"  {'':<18}{'STRICT (1-to-1)':>18}{'LENIENT (m-to-1)':>18}")
+    print(f"  {'intents recovered':<18}{scores['intent_recovery_str']:>18}"
+          f"{lenient['intent_recovery_str']:>18}")
+    print(f"  {'accuracy':<18}{scores['accuracy']:>17.1%}"
+          f"{lenient['accuracy']:>17.1%}")
+    print(f"  fragmentation    : {lenient['mean_clusters_per_recovered_intent']} "
+          f"clusters per recovered intent "
+          f"(max {lenient['max_clusters_for_one_intent']} for one intent)")
 
     variants = recovery_variants(result.labels, gold)
     print("  recovery under other published conventions:")
@@ -113,6 +121,18 @@ def evaluate(name: str, texts: list[str], gold: list[str]) -> dict:
         "n_gold_intents": k_true,
         "min_cluster_size_used": min_cluster_size_for(len(texts), k_true),
         "n_clusters_found": result.n_clusters,
+        "strict": {
+            "criterion": "one_to_one_hungarian_f1_50",
+            "intent_recovery": scores["intent_recovery_str"],
+            "intents_recovered": scores["intents_recovered"],
+            "accuracy": scores["accuracy"],
+            "accuracy_clustered_only": scores["accuracy_clustered_only"],
+        },
+        "lenient": lenient,
+        "criterion_gap": {
+            "recovery_delta": lenient["intents_recovered"] - scores["intents_recovered"],
+            "accuracy_delta": round(lenient["accuracy"] - scores["accuracy"], 4),
+        },
         "intent_recovery": scores["intent_recovery_str"],
         "intents_recovered": scores["intents_recovered"],
         "accuracy": scores["accuracy"],
@@ -163,13 +183,34 @@ def main() -> None:
             "tuned_on": "synthetic OrderBuddy corpus only (src/sweep_params.py); "
                         "applied unchanged to both benchmarks",
         },
-        "recovery_metric_definition": (
-            "Clusters are matched one-to-one to gold intents by Hungarian "
-            "assignment on overlap count. A gold intent counts as recovered "
-            "when its assigned cluster reaches F1 >= 0.50 against it. "
-            "Row-level accuracy uses the same mapping and counts HDBSCAN "
-            "noise (-1) as incorrect."
+        "headline_criterion": "strict",
+        "headline_rationale": (
+            "The deliverable of this stage is a usable taxonomy, and only the "
+            "strict criterion tests for one. Many-to-one lets several "
+            "fragments of a single intent each count as a recovery, which "
+            "inflates the score without yielding a taxonomy anyone could "
+            "build a routing workflow on."
         ),
+        "criterion_definitions": {
+            "strict": (
+                "Clusters are matched to gold intents by Hungarian "
+                "assignment maximising total overlap, so each cluster claims at "
+                "most one intent and each intent at most one cluster. A gold "
+                "intent counts as recovered when its assigned cluster reaches "
+                "F1 >= 0.50 against it (F1 over that cluster's precision and "
+                "recall for that intent). Row accuracy uses the same mapping. "
+                "HDBSCAN noise (-1) counts as incorrect."
+            ),
+            "lenient": (
+                "Many-to-one plurality, the conventional clustering-accuracy "
+                "criterion. Every cluster is mapped to its own plurality gold "
+                "label; several clusters may map to the same intent. A gold "
+                "intent counts as recovered if it is the plurality label of at "
+                "least one cluster. Row accuracy asks whether a row's cluster "
+                "has that row's label as its plurality. HDBSCAN noise (-1) "
+                "counts as incorrect, as in strict."
+            ),
+        },
         "results": results,
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)

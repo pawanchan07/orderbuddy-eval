@@ -1,5 +1,5 @@
 {
-  "run_date": "2026-08-24",
+  "run_date": "2026-08-25",
   "dataset": {
     "path": "data/raw/support_messages.csv",
     "n_rows": 10000,
@@ -190,6 +190,22 @@
       "20": "missing_item"
     }
   },
+  "scores_lenient": {
+    "criterion": "many_to_one_plurality",
+    "n_gold_intents": 16,
+    "n_clusters_found": 23,
+    "intents_recovered": 15,
+    "intent_recovery_str": "15/16",
+    "accuracy": 0.7003,
+    "accuracy_clustered_only": 0.8217,
+    "noise_fraction": 0.1477,
+    "mean_clusters_per_recovered_intent": 1.53,
+    "max_clusters_for_one_intent": 3,
+    "missed_intents": [
+      "exchange_item"
+    ]
+  },
+  "headline_criterion": "strict",
   "taxonomy": [
     {
       "cluster_id": 0,

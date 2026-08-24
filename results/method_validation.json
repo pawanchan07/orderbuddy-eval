@@ -1,6 +1,6 @@
 {
-  "run_date": "2026-08-24",
-  "run_timestamp_utc": "2026-08-24T18:25:34+00:00",
+  "run_date": "2026-08-25",
+  "run_timestamp_utc": "2026-08-24T19:07:56+00:00",
   "method": {
     "encoder": "sentence-transformers/all-MiniLM-L6-v2",
     "umap": {
@@ -19,7 +19,12 @@
     "min_cluster_size_rule": "max(15, round(GRANULARITY_FACTOR * n_rows / k_expected))",
     "tuned_on": "synthetic OrderBuddy corpus only (src/sweep_params.py); applied unchanged to both benchmarks"
   },
-  "recovery_metric_definition": "Clusters are matched one-to-one to gold intents by Hungarian assignment on overlap count. A gold intent counts as recovered when its assigned cluster reaches F1 >= 0.50 against it. Row-level accuracy uses the same mapping and counts HDBSCAN noise (-1) as incorrect.",
+  "headline_criterion": "strict",
+  "headline_rationale": "The deliverable of this stage is a usable taxonomy, and only the strict criterion tests for one. Many-to-one lets several fragments of a single intent each count as a recovery, which inflates the score without yielding a taxonomy anyone could build a routing workflow on.",
+  "criterion_definitions": {
+    "strict": "Clusters are matched to gold intents by Hungarian assignment maximising total overlap, so each cluster claims at most one intent and each intent at most one cluster. A gold intent counts as recovered when its assigned cluster reaches F1 >= 0.50 against it (F1 over that cluster's precision and recall for that intent). Row accuracy uses the same mapping. HDBSCAN noise (-1) counts as incorrect.",
+    "lenient": "Many-to-one plurality, the conventional clustering-accuracy criterion. Every cluster is mapped to its own plurality gold label; several clusters may map to the same intent. A gold intent counts as recovered if it is the plurality label of at least one cluster. Row accuracy asks whether a row's cluster has that row's label as its plurality. HDBSCAN noise (-1) counts as incorrect, as in strict."
+  },
   "results": {
     "banking77": {
       "dataset": "banking77",
@@ -27,6 +32,37 @@
       "n_gold_intents": 77,
       "min_cluster_size_used": 42,
       "n_clusters_found": 91,
+      "strict": {
+        "criterion": "one_to_one_hungarian_f1_50",
+        "intent_recovery": "55/77",
+        "intents_recovered": 55,
+        "accuracy": 0.5867,
+        "accuracy_clustered_only": 0.6687
+      },
+      "lenient": {
+        "criterion": "many_to_one_plurality",
+        "n_gold_intents": 77,
+        "n_clusters_found": 91,
+        "intents_recovered": 71,
+        "intent_recovery_str": "71/77",
+        "accuracy": 0.6587,
+        "accuracy_clustered_only": 0.7508,
+        "noise_fraction": 0.1226,
+        "mean_clusters_per_recovered_intent": 1.28,
+        "max_clusters_for_one_intent": 3,
+        "missed_intents": [
+          "get_physical_card",
+          "pin_blocked",
+          "supported_cards_and_currencies",
+          "top_up_by_bank_transfer_charge",
+          "unable_to_verify_identity",
+          "verify_my_identity"
+        ]
+      },
+      "criterion_gap": {
+        "recovery_delta": 16,
+        "accuracy_delta": 0.072
+      },
       "intent_recovery": "55/77",
       "intents_recovered": 55,
       "accuracy": 0.5867,
@@ -111,6 +147,56 @@
       "n_gold_intents": 151,
       "min_cluster_size_used": 39,
       "n_clusters_found": 152,
+      "strict": {
+        "criterion": "one_to_one_hungarian_f1_50",
+        "intent_recovery": "117/151",
+        "intents_recovered": 117,
+        "accuracy": 0.6414,
+        "accuracy_clustered_only": 0.6988
+      },
+      "lenient": {
+        "criterion": "many_to_one_plurality",
+        "n_gold_intents": 151,
+        "n_clusters_found": 152,
+        "intents_recovered": 126,
+        "intent_recovery_str": "126/151",
+        "accuracy": 0.6952,
+        "accuracy_clustered_only": 0.7574,
+        "noise_fraction": 0.0821,
+        "mean_clusters_per_recovered_intent": 1.21,
+        "max_clusters_for_one_intent": 2,
+        "missed_intents": [
+          "accept_reservations",
+          "account_blocked",
+          "bill_balance",
+          "bill_due",
+          "calendar_update",
+          "change_ai_name",
+          "change_user_name",
+          "ingredients_list",
+          "insurance_change",
+          "make_call",
+          "no",
+          "nutrition_info",
+          "order",
+          "pay_bill",
+          "play_music",
+          "reminder_update",
+          "shopping_list_update",
+          "spelling",
+          "timezone",
+          "todo_list",
+          "translate",
+          "update_playlist",
+          "what_is_your_name",
+          "what_song",
+          "yes"
+        ]
+      },
+      "criterion_gap": {
+        "recovery_delta": 9,
+        "accuracy_delta": 0.0538
+      },
       "intent_recovery": "117/151",
       "intents_recovered": 117,
       "accuracy": 0.6414,

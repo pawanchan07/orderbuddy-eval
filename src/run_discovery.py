@@ -30,6 +30,7 @@ from discovery import (
     discover,
     representative_texts,
     score_against_gold,
+    score_many_to_one,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,6 +51,7 @@ def main() -> None:
     print(f"Noise: {result.noise_fraction:.1%}")
 
     scores = score_against_gold(result.labels, gold)
+    lenient = score_many_to_one(result.labels, gold)
     keywords = cluster_keywords(texts, result.labels)
     reps = representative_texts(texts, result.labels, result.embeddings)
 
@@ -97,6 +99,8 @@ def main() -> None:
             "noise_fraction": round(result.noise_fraction, 4),
         },
         "scores": scores,
+        "scores_lenient": lenient,
+        "headline_criterion": "strict",
         "taxonomy": taxonomy,
     }
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)

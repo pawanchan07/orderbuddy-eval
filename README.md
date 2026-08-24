@@ -136,22 +136,71 @@ number. `results/method_validation.json` quantifies what the assumption is
 worth by re-scoring at ±25% and ±50%.
 
 **2. "Intents recovered" has no single definition.** The conventions disagree
-by a wide margin on identical clusterings. This repo's headline uses the
-strictest: one-to-one Hungarian assignment with F1 ≥ 0.50. Three looser
-conventions are reported alongside it, precisely so a headline figure can
-never be quoted without the rule that produced it.
+by a wide margin on identical clusterings, so every score is reported under
+**two** precisely-defined criteria, side by side.
+
+#### The strict criterion (one-to-one)
+
+Clusters are matched to gold intents by **Hungarian assignment** maximising
+total overlap, so each cluster claims at most one intent and each intent is
+claimed by at most one cluster. A gold intent counts as **recovered** when its
+assigned cluster reaches **F1 ≥ 0.50** against it, where precision is the
+share of that cluster's rows carrying the intent and recall is the share of
+the intent's rows landing in that cluster. Row accuracy uses the same mapping.
+HDBSCAN noise (`-1`) counts as incorrect.
+
+#### The lenient criterion (many-to-one plurality)
+
+Every cluster is mapped to **its own plurality gold label**. Several clusters
+may map to the same intent. A gold intent counts as **recovered** if it is the
+plurality label of at least one cluster. Row accuracy asks whether a row's
+cluster carries that row's label as its plurality. Noise counts as incorrect,
+as in strict.
+
+This is the conventional "clustering accuracy / many-to-one accuracy" of the
+clustering literature. It measures **cluster purity**: given that a message
+landed somewhere, does that cluster's dominant label match?
+
+#### Which is the honest headline
+
+**The strict criterion is the honest headline, and it is what this repo
+reports in bold.**
+
+The deliverable of this stage is a *usable taxonomy* — a label set someone can
+build routing on. Only the strict criterion tests for one, because it demands
+that each intent have a single cluster that both covers it and is mostly it.
+The lenient criterion has no term that penalises splitting one intent across
+ten clusters; each fragment can independently claim a recovery. A method could
+score near-perfectly on lenient recovery while producing a taxonomy far too
+fragmented to use.
+
+The lenient number is not padding, though. It isolates a genuine property —
+purity — and the **gap between the two is itself the diagnostic**: it measures
+exactly how fragmented the clustering is. On these runs the gap is driven by
+intents split across 2–3 clusters apiece, which is why lenient recovery runs
+9–16 intents ahead of strict while row accuracy moves only 5–7 points.
+
+Two further conventions (strict at any non-zero overlap; many-to-one requiring
+≥50% cluster purity) are reported in `results/method_validation.json` for
+context, so a headline figure can never be quoted without the rule that
+produced it.
 
 ### On the figures cited in the CV
 
 The CV cites **75/77** and **143/151** from an earlier run. This run does not
 reproduce them, and no attempt was made to tune toward them.
 
-- **Banking77** — the CV's 75/77 is close to this run's *loosest* convention
-  (strict one-to-one at any overlap), and well above the strict F1 ≥ 0.50
-  figure. A permissive recovery rule plausibly explains the gap.
+| Benchmark | Strict (headline) | Lenient | Loosest tested | Cited on CV |
+|---|---:|---:|---:|---:|
+| Banking77 | **55/77** | 71/77 | 72/77 | 75/77 |
+| CLINC150 | **117/151** | 126/151 | 128/151 | 143/151 |
+
+- **Banking77** — the CV's 75/77 sits just above this run's *loosest*
+  convention (72/77). A permissive recovery rule plausibly explains most of
+  that gap.
 - **CLINC150** — the CV's 143/151 is **not reproduced under any of the four
-  conventions**, including the most permissive. The gap there is real and is
-  not explained by metric definition alone.
+  conventions**, including the most permissive (128/151). A 15-intent gap
+  remains that metric definition does not explain.
 
 Exact figures are in `results/method_validation.json` and the summary table.
 The honest reading: these numbers describe a workable discovery method, not a
@@ -251,6 +300,49 @@ one that says how it missed:
 The two errors partly cancelled and the run came in under the approved
 ceiling, but the input-side omission is a genuine bug in the estimator's
 fidelity and would bite harder on a longer prompt.
+
+---
+
+## Results
+
+Full numbers in `results/summary_table.md`. The headline:
+
+| Tier | Model | Correct | Wrong | Abstained | Safety | Groundedness | Clean & correct | Cost / 1k |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| budget | `claude-haiku-4-5` | 98.5% | 0.2% | 1.2% | 88.0% | 99.8% | 86.2% | $0.581 |
+| mid | `claude-sonnet-5` | 98.8% | 0.8% | 0.5% | 87.8% | 100.0% | 86.5% | $1.505 |
+| premium | `claude-opus-5` | 98.8% | 0.0% | 1.2% | 98.8% | 100.0% | **97.5%** | $3.794 |
+
+**Accuracy does not separate these tiers.** All three land within 0.3 points
+of each other, and on a 400-row set that difference is noise. If accuracy were
+the only criterion, the budget tier would win outright at a sixth the cost.
+
+**The safety gate separates them, and it is one rule doing all the work.**
+Every safety failure across all three tiers is **A2** — echoing an order
+reference into the classification output. Haiku failed it 48 times and Sonnet
+49, against Opus's 5.
+
+This is a competing-constraints test, not a knowledge test. The prompt asks
+for a verbatim evidence span *and* forbids repeating order references, so on
+any message where the identifier sits inside the most natural quote, the model
+has to notice the tension and pick a different span. That is what the premium
+tier is buying here — not better labels, but tighter instruction-following
+when two instructions pull against each other.
+
+Whether that is worth 6.5× the cost is a deployment decision, and it depends
+entirely on whether those identifiers flow anywhere that matters. Two things
+worth noting before treating the gap as settled:
+
+- A prompt revision (an explicit "if the natural span contains an order
+  reference, quote a different part of the message") might close most of the
+  gap on the cheaper tiers. That is untested here, and it is the first thing
+  worth trying before paying for the premium tier.
+- This is one run of one prompt with no repeated sampling, so there are no
+  confidence intervals. The 10× gap in A2 failures is large enough to be
+  real; the 0.3-point accuracy spread is not.
+
+**Groundedness was near-saturated** (99.8–100%), so it did not discriminate.
+A single Haiku response quoted a span that did not appear in the source.
 
 ---
 

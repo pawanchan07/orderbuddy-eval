@@ -267,6 +267,113 @@ def score_against_gold(labels: np.ndarray, gold: list[str],
     }
 
 
+def score_many_to_one(labels: np.ndarray, gold: list[str]) -> dict:
+    """Score under the lenient many-to-one criterion.
+
+    Every cluster is mapped to its own plurality gold label. Several clusters
+    may map to the same intent, so a fragmented-but-pure clustering scores
+    well here where the strict one-to-one criterion penalises it.
+
+    This is the conventional "clustering accuracy / many-to-one accuracy"
+    used throughout the clustering literature. It measures cluster *purity*:
+    given that a message landed in some cluster, does that cluster's dominant
+    label match the message's true label?
+
+    It does not measure whether a usable taxonomy was produced — that is what
+    the strict criterion measures — because nothing here penalises splitting
+    one intent across ten clusters.
+
+    Noise (-1) rows count as incorrect, as in the strict scorer: a row the
+    method declined to cluster is a row it did not classify.
+    """
+    gold_arr = np.asarray(gold)
+    gold_names = sorted(set(gold_arr.tolist()))
+    gold_index = {g: i for i, g in enumerate(gold_names)}
+    cluster_ids = sorted(c for c in set(labels.tolist()) if c != -1)
+    n_gold = len(gold_names)
+
+    if not cluster_ids:
+        return {
+            "criterion": "many_to_one_plurality",
+            "n_gold_intents": n_gold,
+            "n_clusters_found": 0,
+            "intents_recovered": 0,
+            "intent_recovery_str": f"0/{n_gold}",
+            "accuracy": 0.0,
+            "accuracy_clustered_only": 0.0,
+            "noise_fraction": round(float((labels == -1).mean()), 4),
+            "mean_clusters_per_recovered_intent": 0.0,
+            "missed_intents": gold_names,
+        }
+
+    cluster_index = {c: i for i, c in enumerate(cluster_ids)}
+    contingency = np.zeros((len(cluster_ids), n_gold), dtype=np.int64)
+    for lab, g in zip(labels, gold_arr):
+        if lab != -1:
+            contingency[cluster_index[lab], gold_index[g]] += 1
+
+    # Each cluster takes its plurality label.
+    mapping: dict[int, str] = {}
+    fragments: dict[str, int] = {}
+    for cid in cluster_ids:
+        row = contingency[cluster_index[cid]]
+        if row.sum() == 0:
+            continue
+        name = gold_names[int(row.argmax())]
+        mapping[cid] = name
+        fragments[name] = fragments.get(name, 0) + 1
+
+    recovered = sorted(fragments)
+    correct = sum(
+        1 for lab, g in zip(labels, gold_arr)
+        if lab != -1 and mapping.get(int(lab)) == g
+    )
+    n = len(gold_arr)
+    clustered = int((labels != -1).sum())
+
+    return {
+        "criterion": "many_to_one_plurality",
+        "n_gold_intents": n_gold,
+        "n_clusters_found": len(cluster_ids),
+        "intents_recovered": len(recovered),
+        "intent_recovery_str": f"{len(recovered)}/{n_gold}",
+        "accuracy": round(correct / n, 4) if n else 0.0,
+        "accuracy_clustered_only": round(correct / clustered, 4) if clustered else 0.0,
+        "noise_fraction": round(float((labels == -1).mean()), 4),
+        "mean_clusters_per_recovered_intent": (
+            round(len(cluster_ids) / len(recovered), 2) if recovered else 0.0
+        ),
+        "max_clusters_for_one_intent": max(fragments.values()) if fragments else 0,
+        "missed_intents": [g for g in gold_names if g not in fragments],
+    }
+
+
+def score_dual(labels: np.ndarray, gold: list[str],
+               recovery_f1_threshold: float = 0.50) -> dict:
+    """Score under both criteria and report them side by side.
+
+    Neither number is the whole truth. The strict criterion answers "did this
+    produce a usable taxonomy"; the lenient one answers "are the clusters
+    pure". The gap between them is itself the finding: it is a direct measure
+    of how fragmented the clustering is.
+    """
+    strict = score_against_gold(labels, gold, recovery_f1_threshold)
+    lenient = score_many_to_one(labels, gold)
+    return {
+        "strict": strict,
+        "lenient": lenient,
+        "criterion_gap": {
+            "recovery_delta": lenient["intents_recovered"] - strict["intents_recovered"],
+            "accuracy_delta": round(lenient["accuracy"] - strict["accuracy"], 4),
+            "interpretation": (
+                "The gap is fragmentation: clusters that are pure enough to "
+                "take an intent's plurality but too small or too numerous to "
+                "be that intent's single one-to-one match."
+            ),
+        },
+    }
+
+
 def recovery_variants(labels: np.ndarray, gold: list[str]) -> dict:
     """Count recovered intents under four different published conventions.
 
