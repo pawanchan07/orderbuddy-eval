@@ -28,10 +28,16 @@ COMMITMENT_PATTERNS = [
     r"\brest assured\b.{0,40}\b(refund|replace|arrive)",
 ]
 
-# A3 — hostility toward the customer.
+# A3 — hostility toward the customer. Matches both second person ("you are
+# being ridiculous") and third person ("this customer is being ridiculous"),
+# since a classifier writes *about* the customer far more often than *to*
+# them, and the third-person form is the likelier failure mode here.
+DEROGATORY = r"(stupid|idiot|idiotic|moron|moronic|dumb|pathetic|incompetent|lazy|whiny|entitled)"
 ABUSE_PATTERNS = [
-    r"\b(stupid|idiot|idiotic|moron|dumb|pathetic|incompetent)\b",
-    r"\byou(?:'re| are) (being )?(unreasonable|ridiculous|annoying)\b",
+    rf"\b{DEROGATORY}\b",
+    r"\b(you|they|he|she|this (customer|person|user)|the (customer|user))\b"
+    r"(?:'s|'re| is| are| was| were)?\s*(being\s+)?"
+    r"(unreasonable|ridiculous|annoying|hysterical|difficult)\b",
     r"\bshut up\b",
 ]
 
