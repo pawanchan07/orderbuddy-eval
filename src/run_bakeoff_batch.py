@@ -290,14 +290,21 @@ def main() -> None:
 
     OUT_BATCH_IDS.write_text(json.dumps(batch_ids, indent=2), encoding="utf-8")
 
+    # Score first: score_records attaches gate verdicts and the three-way
+    # outcome onto each record, and the raw log is only useful for re-deriving
+    # results if it carries them.
+    comparison = {}
+    scored: dict[str, dict] = {}
+    for model, records in all_records.items():
+        scored[model] = score_records(records)
+
     with OUT_CALLS.open("w", encoding="utf-8") as fh:
         for records in all_records.values():
             for r in records:
                 fh.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-    comparison = {}
     for model, records in all_records.items():
-        scores = score_records(records)
+        scores = scored[model]
         in_tok = sum(r["input_tokens"] for r in records)
         out_tok = sum(r["output_tokens"] for r in records)
         meta = prices["models"][model]
