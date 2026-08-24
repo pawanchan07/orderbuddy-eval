@@ -1,0 +1,207 @@
+{
+  "run_date": "2026-08-24",
+  "run_timestamp_utc": "2026-08-24T18:25:34+00:00",
+  "method": {
+    "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "umap": {
+      "n_components": 10,
+      "n_neighbors": 80,
+      "min_dist": 0.0,
+      "metric": "cosine",
+      "random_state": 20260824
+    },
+    "hdbscan_fixed": {
+      "min_samples": 15,
+      "metric": "euclidean",
+      "cluster_selection_method": "eom"
+    },
+    "granularity_factor": 0.25,
+    "min_cluster_size_rule": "max(15, round(GRANULARITY_FACTOR * n_rows / k_expected))",
+    "tuned_on": "synthetic OrderBuddy corpus only (src/sweep_params.py); applied unchanged to both benchmarks"
+  },
+  "recovery_metric_definition": "Clusters are matched one-to-one to gold intents by Hungarian assignment on overlap count. A gold intent counts as recovered when its assigned cluster reaches F1 >= 0.50 against it. Row-level accuracy uses the same mapping and counts HDBSCAN noise (-1) as incorrect.",
+  "results": {
+    "banking77": {
+      "dataset": "banking77",
+      "n_rows": 13083,
+      "n_gold_intents": 77,
+      "min_cluster_size_used": 42,
+      "n_clusters_found": 91,
+      "intent_recovery": "55/77",
+      "intents_recovered": 55,
+      "accuracy": 0.5867,
+      "accuracy_clustered_only": 0.6687,
+      "ari": 0.3442,
+      "nmi": 0.7738,
+      "noise_fraction": 0.1226,
+      "recovery_f1_threshold": 0.5,
+      "missed_intents": [
+        "Refund_not_showing_up",
+        "balance_not_updated_after_bank_transfer",
+        "cash_withdrawal_not_recognised",
+        "declined_cash_withdrawal",
+        "exchange_via_app",
+        "get_physical_card",
+        "getting_spare_card",
+        "lost_or_stolen_card",
+        "order_physical_card",
+        "pin_blocked",
+        "receiving_money",
+        "supported_cards_and_currencies",
+        "top_up_by_bank_transfer_charge",
+        "top_up_failed",
+        "top_up_reverted",
+        "topping_up_by_card",
+        "transfer_not_received_by_recipient",
+        "transfer_timing",
+        "unable_to_verify_identity",
+        "verify_my_identity",
+        "virtual_card_not_working",
+        "wrong_amount_of_cash_received"
+      ],
+      "claimed_in_cv": "75/77",
+      "recovery_by_metric_definition": {
+        "strict_1to1_f1_50": "55/77",
+        "strict_1to1_any": "72/77",
+        "many_to_one_plurality": "71/77",
+        "many_to_one_pure_50": "65/77"
+      },
+      "k_expected_sensitivity": [
+        {
+          "k_expected": 38,
+          "multiplier": 0.5,
+          "min_cluster_size": 86,
+          "n_clusters": 54,
+          "intent_recovery": "48/77",
+          "accuracy": 0.5809,
+          "ari": 0.444
+        },
+        {
+          "k_expected": 58,
+          "multiplier": 0.75,
+          "min_cluster_size": 56,
+          "n_clusters": 81,
+          "intent_recovery": "54/77",
+          "accuracy": 0.5832,
+          "ari": 0.3789
+        },
+        {
+          "k_expected": 96,
+          "multiplier": 1.25,
+          "min_cluster_size": 34,
+          "n_clusters": 115,
+          "intent_recovery": "56/77",
+          "accuracy": 0.571,
+          "ari": 0.3209
+        },
+        {
+          "k_expected": 116,
+          "multiplier": 1.5,
+          "min_cluster_size": 28,
+          "n_clusters": 141,
+          "intent_recovery": "56/77",
+          "accuracy": 0.5269,
+          "ari": 0.2849
+        }
+      ]
+    },
+    "clinc150": {
+      "dataset": "clinc150",
+      "n_rows": 23850,
+      "n_gold_intents": 151,
+      "min_cluster_size_used": 39,
+      "n_clusters_found": 152,
+      "intent_recovery": "117/151",
+      "intents_recovered": 117,
+      "accuracy": 0.6414,
+      "accuracy_clustered_only": 0.6988,
+      "ari": 0.4231,
+      "nmi": 0.8502,
+      "noise_fraction": 0.0821,
+      "recovery_f1_threshold": 0.5,
+      "missed_intents": [
+        "accept_reservations",
+        "account_blocked",
+        "bill_balance",
+        "bill_due",
+        "calendar",
+        "change_ai_name",
+        "change_user_name",
+        "distance",
+        "ingredients_list",
+        "insurance_change",
+        "make_call",
+        "min_payment",
+        "next_song",
+        "no",
+        "nutrition_info",
+        "oos",
+        "order",
+        "pay_bill",
+        "play_music",
+        "reminder_update",
+        "report_lost_card",
+        "rewards_balance",
+        "schedule_maintenance",
+        "shopping_list",
+        "shopping_list_update",
+        "spelling",
+        "timezone",
+        "todo_list",
+        "translate",
+        "update_playlist",
+        "user_name",
+        "what_is_your_name",
+        "what_song",
+        "yes"
+      ],
+      "claimed_in_cv": "143/151",
+      "recovery_by_metric_definition": {
+        "strict_1to1_f1_50": "117/151",
+        "strict_1to1_any": "128/151",
+        "many_to_one_plurality": "126/151",
+        "many_to_one_pure_50": "112/151"
+      },
+      "k_expected_sensitivity": [
+        {
+          "k_expected": 76,
+          "multiplier": 0.5,
+          "min_cluster_size": 78,
+          "n_clusters": 120,
+          "intent_recovery": "113/151",
+          "accuracy": 0.671,
+          "ari": 0.4922
+        },
+        {
+          "k_expected": 113,
+          "multiplier": 0.75,
+          "min_cluster_size": 53,
+          "n_clusters": 132,
+          "intent_recovery": "116/151",
+          "accuracy": 0.67,
+          "ari": 0.4774
+        },
+        {
+          "k_expected": 189,
+          "multiplier": 1.25,
+          "min_cluster_size": 32,
+          "n_clusters": 186,
+          "intent_recovery": "122/151",
+          "accuracy": 0.6229,
+          "ari": 0.3196
+        },
+        {
+          "k_expected": 226,
+          "multiplier": 1.5,
+          "min_cluster_size": 26,
+          "n_clusters": 206,
+          "intent_recovery": "124/151",
+          "accuracy": 0.6209,
+          "ari": 0.2968
+        }
+      ],
+      "oos_note": "The 'oos' class is an intentionally incoherent catch-all; it is counted in the denominator above to match the CV's 143/151 framing. In-scope rows: 22500 of 23850.",
+      "oos_recovered": false
+    }
+  }
+}

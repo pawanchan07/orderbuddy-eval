@@ -1,0 +1,724 @@
+{
+  "run_date": "2026-08-24",
+  "dataset": {
+    "path": "data/raw/support_messages.csv",
+    "n_rows": 10000,
+    "n_gold_intents": 16
+  },
+  "method": {
+    "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "umap": {
+      "n_components": 10,
+      "n_neighbors": 80,
+      "min_dist": 0.0,
+      "metric": "cosine",
+      "random_state": 20260824
+    },
+    "hdbscan": {
+      "min_samples": 15,
+      "metric": "euclidean",
+      "cluster_selection_method": "eom",
+      "min_cluster_size": 156
+    },
+    "granularity_prior_k_expected": 16
+  },
+  "clustering": {
+    "n_clusters": 23,
+    "noise_fraction": 0.1477
+  },
+  "scores": {
+    "n_gold_intents": 16,
+    "n_clusters_found": 23,
+    "intents_recovered": 14,
+    "intent_recovery_str": "14/16",
+    "recovery_f1_threshold": 0.5,
+    "accuracy": 0.6078,
+    "accuracy_clustered_only": 0.7131,
+    "noise_fraction": 0.1477,
+    "ari": 0.4816,
+    "nmi": 0.6614,
+    "missed_intents": [
+      "exchange_item",
+      "product_availability"
+    ],
+    "per_intent": {
+      "subscription_manage": {
+        "cluster_id": 0,
+        "overlap": 181,
+        "precision": 1.0,
+        "recall": 0.5801,
+        "f1": 0.7343,
+        "recovered": true
+      },
+      "change_payment_method": {
+        "cluster_id": 1,
+        "overlap": 410,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "recovered": true
+      },
+      "discount_promo_code": {
+        "cluster_id": 2,
+        "overlap": 259,
+        "precision": 1.0,
+        "recall": 0.5756,
+        "f1": 0.7306,
+        "recovered": true
+      },
+      "invoice_receipt_request": {
+        "cluster_id": 3,
+        "overlap": 402,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "recovered": true
+      },
+      "change_shipping_address": {
+        "cluster_id": 4,
+        "overlap": 524,
+        "precision": 1.0,
+        "recall": 0.8647,
+        "f1": 0.9274,
+        "recovered": true
+      },
+      "cancel_order": {
+        "cluster_id": 5,
+        "overlap": 686,
+        "precision": 0.7903,
+        "recall": 0.8717,
+        "f1": 0.829,
+        "recovered": true
+      },
+      "account_login_issue": {
+        "cluster_id": 6,
+        "overlap": 228,
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1": 0.6667,
+        "recovered": true
+      },
+      "order_status": {
+        "cluster_id": 8,
+        "overlap": 882,
+        "precision": 0.9216,
+        "recall": 0.7558,
+        "f1": 0.8305,
+        "recovered": true
+      },
+      "damaged_item": {
+        "cluster_id": 9,
+        "overlap": 240,
+        "precision": 1.0,
+        "recall": 0.434,
+        "f1": 0.6053,
+        "recovered": true
+      },
+      "product_availability": {
+        "cluster_id": 12,
+        "overlap": 132,
+        "precision": 0.5973,
+        "recall": 0.3173,
+        "f1": 0.4144,
+        "recovered": false
+      },
+      "return_request": {
+        "cluster_id": 13,
+        "overlap": 419,
+        "precision": 1.0,
+        "recall": 0.4878,
+        "f1": 0.6557,
+        "recovered": true
+      },
+      "refund_status": {
+        "cluster_id": 15,
+        "overlap": 414,
+        "precision": 1.0,
+        "recall": 0.4549,
+        "f1": 0.6254,
+        "recovered": true
+      },
+      "exchange_item": {
+        "cluster_id": 17,
+        "overlap": 37,
+        "precision": 0.081,
+        "recall": 0.0685,
+        "f1": 0.0742,
+        "recovered": false
+      },
+      "delivery_delay": {
+        "cluster_id": 18,
+        "overlap": 614,
+        "precision": 0.9417,
+        "recall": 0.6109,
+        "f1": 0.7411,
+        "recovered": true
+      },
+      "wrong_item_received": {
+        "cluster_id": 19,
+        "overlap": 369,
+        "precision": 0.8348,
+        "recall": 0.5913,
+        "f1": 0.6923,
+        "recovered": true
+      },
+      "missing_item": {
+        "cluster_id": 20,
+        "overlap": 281,
+        "precision": 1.0,
+        "recall": 0.5586,
+        "f1": 0.7168,
+        "recovered": true
+      }
+    },
+    "cluster_to_intent": {
+      "0": "subscription_manage",
+      "1": "change_payment_method",
+      "2": "discount_promo_code",
+      "3": "invoice_receipt_request",
+      "4": "change_shipping_address",
+      "5": "cancel_order",
+      "6": "account_login_issue",
+      "8": "order_status",
+      "9": "damaged_item",
+      "12": "product_availability",
+      "13": "return_request",
+      "15": "refund_status",
+      "17": "exchange_item",
+      "18": "delivery_delay",
+      "19": "wrong_item_received",
+      "20": "missing_item"
+    }
+  },
+  "taxonomy": [
+    {
+      "cluster_id": 0,
+      "size": 181,
+      "share": 0.0181,
+      "derived_name": "subscription_manage",
+      "top_terms": [
+        "need update",
+        "subscription",
+        "pause",
+        "subscription box",
+        "pause monthly",
+        "update subscription",
+        "frequency",
+        "monthly delivery"
+      ],
+      "representative_messages": [
+        "Hey, how do I pause my monthly delivery? I don't remember signing up for this. Thank you.",
+        "Hi there, I need to update what's in my subscription box. I'd like it every two months instead.",
+        "I need to update what's in my subscription box. I'd like it every two months instead. Thank you.",
+        "I need to update what's in my subscription box. I'd like it every two months instead. Thank you.",
+        "Hi team, I need to update what's in my subscription box. I'd like it every two months instead. Can you help?"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 410,
+      "share": 0.041,
+      "derived_name": "change_payment_method",
+      "top_terms": [
+        "payment",
+        "card",
+        "failed",
+        "failed update",
+        "payment failed",
+        "fraud account",
+        "fraud",
+        "cancelled fraud"
+      ],
+      "representative_messages": [
+        "Please update the payment method for my order. The new card is already on my account. Please get back to me asap.",
+        "I need some help please. please update the payment method for my order. The new card is already on my account.",
+        "Quick question - please update the payment method for my order. The new card is already on my account.",
+        "Sorry to bother you but please update the payment method for my order. The new card is already on my account. I'd really appreciate a quick response.",
+        "Please update the payment method for my order. The new card is already on my account."
+      ]
+    },
+    {
+      "cluster_id": 2,
+      "size": 259,
+      "share": 0.0259,
+      "derived_name": "discount_promo_code",
+      "top_terms": [
+        "discount",
+        "price used",
+        "charged price",
+        "voucher",
+        "used voucher",
+        "apply discount",
+        "applied",
+        "discount retroactively"
+      ],
+      "representative_messages": [
+        "Why was I charged full price when I used a voucher? It said code expired but it shouldn't be. Cheers.",
+        "hi orderbuddy, can you apply my discount retroactively? the code was welcome20. thanks.",
+        "I need some help please. can you apply my discount retroactively? It said code expired but it shouldn't be. Thanks in advance.",
+        "Hello support, why was I charged full price when I used a voucher? It said code expired but it shouldn't be. Let me know",
+        "Hello support, can you apply my discount retroactively?? The code was WELCOME20."
+      ]
+    },
+    {
+      "cluster_id": 3,
+      "size": 402,
+      "share": 0.0402,
+      "derived_name": "invoice_receipt_request",
+      "top_terms": [
+        "invoice",
+        "needs",
+        "proper invoice",
+        "need proper",
+        "invoice expenses",
+        "proper",
+        "expenses",
+        "doesn count"
+      ],
+      "representative_messages": [
+        "Hi OrderBuddy, I need a proper invoice for expenses. I can't find it in my account.",
+        "Hello support, I need a proper invoice for expenses. I can't find it in my account.",
+        "I need some help please. where do I download my receipt? The confirmation email doesn't count as an invoice. Cheers.",
+        "Hello support, I need a proper invoice for expenses. I can't find it in my acount. Cheers.",
+        "Hi team, where do I download my receipt?? The confirmation email doesn't count as an invoice. Can you help?"
+      ]
+    },
+    {
+      "cluster_id": 4,
+      "size": 524,
+      "share": 0.0524,
+      "derived_name": "change_shipping_address",
+      "top_terms": [
+        "address",
+        "old",
+        "delivery address",
+        "ll",
+        "ll send",
+        "address confirm",
+        "new address",
+        "send new"
+      ],
+      "representative_messages": [
+        "Hello, how do I update the delivery address? I'll send the new address once you confirm. Please get back to me asap.",
+        "Hello, I need to change the delivery address on #OB3378. I'll send the new address once you confirm. Thank you.",
+        "Good morning, how do I update the delivery address? The postcode is wrong on the order. Please advise.",
+        "Hi there, how do I update the delivery address? The postcode is wrong on the order. Let me know.",
+        "Hi OrderBuddy, I entered the old address by mistake on 66045892. I'll send the new address once you confirm. Let me know."
+      ]
+    },
+    {
+      "cluster_id": 5,
+      "size": 868,
+      "share": 0.0868,
+      "derived_name": "cancel_order",
+      "top_terms": [
+        "cancel",
+        "cancel order",
+        "want cancel",
+        "ships",
+        "ordered mistake",
+        "stop",
+        "need cancel",
+        "changed mind"
+      ],
+      "representative_messages": [
+        "please cancel my order. i don't need it any more. any help appreciated.",
+        "Hi there, I need to cancel the order I placed back in June. I ordered twice by accident. Thank you.",
+        "I need some help please. I want to cancel #OB1599. I ordered twice by accident. Please get back to me asap.",
+        "Hi, I need to cancel the order I placed back in June. I don't need it any more.",
+        "Hello support, I need to cancel the order I placed over a week ago. Thanks."
+      ]
+    },
+    {
+      "cluster_id": 6,
+      "size": 228,
+      "share": 0.0228,
+      "derived_name": "account_login_issue",
+      "top_terms": [
+        "account",
+        "tried resetting",
+        "log",
+        "tried",
+        "resetting",
+        "resetting times",
+        "ve tried",
+        "times"
+      ],
+      "representative_messages": [
+        "Hello, I'm locked out of my account. It keeps saying account not found. Thanks.",
+        "Hello, I'm locked out of my account. It keeps saying account not found. Thanks in advance.",
+        "Hi team, I'm locked out of my account. It keeps saying account not found. Thanks!",
+        "Quick question - I'm locked out of my account. It keeps saying account not found. Thank you.",
+        "I'm locked out of my account. I've tried resetting three times. Regards"
+      ]
+    },
+    {
+      "cluster_id": 7,
+      "size": 170,
+      "share": 0.017,
+      "derived_name": "UNMAPPED_cluster_7",
+      "top_terms": [
+        "reset",
+        "reset email",
+        "email arrives",
+        "password reset",
+        "arrives",
+        "email account",
+        "need track",
+        "track"
+      ],
+      "representative_messages": [
+        "I need some help please. my password reset email never arrives. It keeps saying account not found. Thanks!",
+        "Hello, my password reset email never arrives. It keeps saying account not found. Cheers.",
+        "Hi team, my password reset email never arrives. It keeps saying account not found. Thank you.",
+        "Hi, my password reset email never arrives. It keeps saying account not found. Thanks!",
+        "My password reset email never arrives. It keeps saying account not found. Cheers."
+      ]
+    },
+    {
+      "cluster_id": 8,
+      "size": 957,
+      "share": 0.0957,
+      "derived_name": "order_status",
+      "top_terms": [
+        "way tracking",
+        "idea",
+        "placed order",
+        "idea tracking",
+        "ago idea",
+        "tell tracking",
+        "order tracking",
+        "happening ob"
+      ],
+      "representative_messages": [
+        "Hi OrderBuddy, where is my order OB-47934? The tracking page hasn't updated in days.",
+        "Good morning, where is my order OB-29812? The tracking page hasn't updated in days.",
+        "Hi team, where is my order 69324806? The tracking page hasn't updated in days. Let me know.",
+        "Hi OrderBuddy, could you look up #430548 for me and tell me where it's at? The tracking page hasn't updated in days. Thanks.",
+        "I've been waiting on hold so I'm trying here instead. where is my order #OB1100? The tracking page hasn't updated in days. Any help appreciated."
+      ]
+    },
+    {
+      "cluster_id": 9,
+      "size": 240,
+      "share": 0.024,
+      "derived_name": "damaged_item",
+      "top_terms": [
+        "contents",
+        "crushed",
+        "crushed contents",
+        "packaging crushed",
+        "ruined",
+        "contents ruined",
+        "cracked",
+        "screen"
+      ],
+      "representative_messages": [
+        "Hello support, teh packaging was crushed and the contents are ruined. I want a replacement, not a refund.",
+        "Hello support, the packaging was crushed and the contents are ruined. I want a replacement, not a refund. I'd really appreciate a quick response.",
+        "the screen was already broken when it arrived. the box looked fine from the outside. please get back to me asap.",
+        "Hi OrderBuddy, the packaging was crushed and the contents are ruined. Please get back to me asap.",
+        "The screen was already broken when it arrived. The box looked fine from the outside. Thanks!"
+      ]
+    },
+    {
+      "cluster_id": 10,
+      "size": 223,
+      "share": 0.0223,
+      "derived_name": "UNMAPPED_cluster_10",
+      "top_terms": [
+        "medium received",
+        "extra small",
+        "small",
+        "extra",
+        "received extra",
+        "kitchen scales",
+        "kitchen",
+        "scales"
+      ],
+      "representative_messages": [
+        "Hi team, I ordered the kitchen scales but got something completely different. I ordered a medium and received an extra small. Let me know.",
+        "Hi, I ordered the kitchen scales but got something completely different. I ordered a medium and received an extra small. Thank you.",
+        "Sorry to bother you but somebody else's order arrived at my house. I ordered a medium and received an extra small. Can you help?",
+        "Hi OrderBuddy, I received the wrong item. I ordered a medium and received an extra small. Thank you.",
+        "Quick question - somebody else's order arrived at my house. I ordered a medium and received an extra small. Please get back to me asap."
+      ]
+    },
+    {
+      "cluster_id": 11,
+      "size": 277,
+      "share": 0.0277,
+      "derived_name": "UNMAPPED_cluster_11",
+      "top_terms": [
+        "return colour",
+        "winter",
+        "jacket",
+        "winter jacket",
+        "return new",
+        "expected colour",
+        "exchange winter",
+        "new backpack"
+      ],
+      "representative_messages": [
+        "Sorry to bother you but can I return my new backpack that I bought earlier this month? The colour is nothing like the photos. Please get back to me asap.",
+        "Good morning, can I return my new backpack that I bought over a week ago? The colour is nothing like the photos.",
+        "Hi, I want to return my winter jacket. The colour is nothing like the photos",
+        "I need some help please. I want to return my new backpack. The colour is nothing like the photos. Cheers.",
+        "I want to return my new backpack. The colour is nothing like the photos."
+      ]
+    },
+    {
+      "cluster_id": 12,
+      "size": 221,
+      "share": 0.0221,
+      "derived_name": "product_availability",
+      "top_terms": [
+        "list",
+        "list stock",
+        "stock items",
+        "waiting list",
+        "items",
+        "sold",
+        "want showing",
+        "showing sold"
+      ],
+      "representative_messages": [
+        "Hello, do you have the air fryer in stock? Can you notify me when it's available? Thanks in advance.",
+        "Do you have the air fryer in stock? Please get back to me asap.",
+        "Hello, do you have the air fryer in stock? Please get back to me asap.",
+        "I need some help please. do you have the air fryer in stock?? Is it discontinued? Please get back to me asap.",
+        "Hi, when will the air fryer be back in stock? I need it in a size 10. Thank you."
+      ]
+    },
+    {
+      "cluster_id": 13,
+      "size": 419,
+      "share": 0.0419,
+      "derived_name": "return_request",
+      "top_terms": [
+        "returns",
+        "send returns",
+        "label",
+        "returns label",
+        "send isn",
+        "isn expected",
+        "expected",
+        "want send"
+      ],
+      "representative_messages": [
+        "Hey, I need to arrange a return. Where do I send it? Can you help?",
+        "Quick question - I need to arrange a return. Where do I send it? Let me know.",
+        "I've been waiting on hold so I'm trying here instead. I need to arrange a return. Where do I send it? Regards.",
+        "I need to arrange a return. Where do I send it? Regards.",
+        "hi there, what's your returns process? where do i send it? cheers."
+      ]
+    },
+    {
+      "cluster_id": 14,
+      "size": 235,
+      "share": 0.0235,
+      "derived_name": "UNMAPPED_cluster_14",
+      "top_terms": [
+        "money",
+        "card went",
+        "check card",
+        "went",
+        "card",
+        "refund check",
+        "went thanks",
+        "money ob"
+      ],
+      "representative_messages": [
+        "Hello, my refund hasn't come through yet. Can you check which card it went back to? I'd really appreciate a quick response.",
+        "Hey, my refund hasn't come through yet. Can you check which card it went back to? Thanks in advance.",
+        "Hi there, my refund hasn't come through yet. Can you check which card it went back to? Thanks in advance.",
+        "quick question - my refund hasn't come through yet. can you check which card it went back to? thank you",
+        "Hi, my refund hasn't come through yet. Can you check which card it went back to? Cheers"
+      ]
+    },
+    {
+      "cluster_id": 15,
+      "size": 414,
+      "share": 0.0414,
+      "derived_name": "refund_status",
+      "top_terms": [
+        "refunded",
+        "come",
+        "hasn come",
+        "told",
+        "told refunded",
+        "refund hasn",
+        "chasing",
+        "confirmed"
+      ],
+      "representative_messages": [
+        "Hi there, my refund hasn't come through yet. The tracking shows you received it. Thank you.",
+        "My refund hasn't come through yet. The tracking shows you received it. Please get back to me asap",
+        "Hi there, my refund hasn't come through yet. Please get back to me asap.",
+        "Quick question - my refund hasn't come through yet. The tracking shows you received it. Regards.",
+        "Quick question - my refund hasn't come through yet. The tracking shows you received it. Regards."
+      ]
+    },
+    {
+      "cluster_id": 16,
+      "size": 312,
+      "share": 0.0312,
+      "derived_name": "UNMAPPED_cluster_16",
+      "top_terms": [
+        "desk",
+        "desk lamp",
+        "lamp",
+        "chair",
+        "office chair",
+        "office",
+        "standing",
+        "standing desk"
+      ],
+      "representative_messages": [
+        "The standing desk is missing from my delivery. Please get back to me asap.",
+        "Hi there, I'd like to call off my order for the standing desk. It hasn't shipped yet as far as I can tell. Please get back to me asap.",
+        "i've been waiting on hold so i'm trying here instead. still waiting on the refund for the standing desk. i have the return receipt if you need it. let me know.",
+        "Can I return the standing desk that I bought at the weekend? Let me know.",
+        "Still waiting on the refund for the desk lamp. I have the return receipt if you need it. Regards."
+      ]
+    },
+    {
+      "cluster_id": 17,
+      "size": 457,
+      "share": 0.0457,
+      "derived_name": "exchange_item",
+      "top_terms": [
+        "sheets",
+        "set bed",
+        "set",
+        "bed sheets",
+        "bed",
+        "cases",
+        "phone",
+        "phone cases"
+      ],
+      "representative_messages": [
+        "NOT SURE WHO TO ASK ABOUT THIS BUT CAN I RETURN A PAIR OF HEADPHONES THAT I BOUGHT EARLIER THIS MONTH? DO I HAVE TO PAY FOR RETURN POSTAGE? LET ME KNOW.",
+        "Hey, can I return a bluetooth speaker that I bought yesterday? Do I have to pay for return postage? Can you help?",
+        "Sorry to bother you but starting a return for a pair of headphones. Do I have to pay for return postage?",
+        "i've been waiting on hold so i'm trying here instead. starting a return for a pair of headphones. do i have to pay for return postage?",
+        "i need some help pls. i want to return a bluetooth speaker. do i have to pay for return postage? thank you."
+      ]
+    },
+    {
+      "cluster_id": 18,
+      "size": 652,
+      "share": 0.0652,
+      "derived_name": "delivery_delay",
+      "top_terms": [
+        "soon cancel",
+        "taken time",
+        "work waiting",
+        "time work",
+        "arrive",
+        "actually arrive",
+        "tell actually",
+        "frustrating"
+      ],
+      "representative_messages": [
+        "Hi OrderBuddy, the delivery date has been pushed back twice now. I've taken time off work waiting for this. Please get back to me asap.",
+        "The delivery date has been pushed back twice now. I've taken time off work waiting for this. Please get back to me asap.",
+        "The delivery date has been pushed back twice now. I've taken time off work waiting for this. Please get back to me asap.",
+        "Hi OrderBuddy, the delivery date has been pushed back twice now. If it can't get here soon I'd rather cancel. Thanks!",
+        "Hi OrderBuddy, my parcel is way past its estimated delivery date. If it can't get here soon I'd rather cancel. Thank you."
+      ]
+    },
+    {
+      "cluster_id": 19,
+      "size": 442,
+      "share": 0.0442,
+      "derived_name": "wrong_item_received",
+      "top_terms": [
+        "need exchange",
+        "wrong item",
+        "received wrong",
+        "wrong thing",
+        "thing",
+        "sent wrong",
+        "product",
+        "product delivered"
+      ],
+      "representative_messages": [
+        "Hi OrderBuddy, I received the wrong item. Please send the correct item as soon as possible.",
+        "Hi OrderBuddy, I received the wrong item. Please send the correct item as soon as possible. Thank you.",
+        "Hi OrderBuddy, I received the wrong item. Thanks!",
+        "Hello support, somebody else's order arrived at my house. Please send the correct item as soon as possible.",
+        "You sent me the wrong thing in order 720851. The packing slip has someone else's name on it. Please advise."
+      ]
+    },
+    {
+      "cluster_id": 20,
+      "size": 281,
+      "share": 0.0281,
+      "derived_name": "missing_item",
+      "top_terms": [
+        "item wasn",
+        "wasn box",
+        "box arrived",
+        "arrived missing",
+        "missing item",
+        "order missing",
+        "things",
+        "things arrived"
+      ],
+      "representative_messages": [
+        "Hi team, #569613 arrived but one item wasn't in the box. The packing slip lists it but it isn't there. Please get back to me asap.",
+        "Hello, 40480965 arrived but one item wasn't in the box. The packing slip lists it but it isn't there.",
+        "Hi OrderBuddy, the box arrived but it was missing an item.",
+        "Hi team, #OB4893 arrived but one item wasn't in the box. Thanks.",
+        "Hi OrderBuddy, the box arrived but it was missing an item. The packing slip lists it but it isn't there. Thank you."
+      ]
+    },
+    {
+      "cluster_id": 21,
+      "size": 193,
+      "share": 0.0193,
+      "derived_name": "UNMAPPED_cluster_21",
+      "top_terms": [
+        "espresso",
+        "espresso machine",
+        "machine",
+        "grinder",
+        "coffee",
+        "coffee grinder",
+        "ordered espresso",
+        "ordered coffee"
+      ],
+      "representative_messages": [
+        "I've been waiting on hold so I'm trying here instead. this order is now a week overdue. I need the espresso machine before the weekend. Thank you.",
+        "Sorry to bother you but starting a return for the espresso machine. It's still unopened in the original packaging. Please get back to me asap.",
+        "Hi team, can I return the coffee grinder that I bought yesterday? Can you help?",
+        "This order is now a week overdue. I need the espresso machine before the weekend.",
+        "I've been waiting on hold so I'm trying here instead. received the espresso machine on the 3rd and it's clearly damaged. I want a replacement, not a refund. Can you help?"
+      ]
+    },
+    {
+      "cluster_id": 22,
+      "size": 158,
+      "share": 0.0158,
+      "derived_name": "UNMAPPED_cluster_22",
+      "top_terms": [
+        "running watch",
+        "running",
+        "watch",
+        "ruined doesn",
+        "watch weekend",
+        "arrived doesn",
+        "ordered running",
+        "crushed"
+      ],
+      "representative_messages": [
+        "Not sure who to ask about this but received the running watch last month and it's clearly damaged. It doesn't power on at all. Can you help?",
+        "Sorry to bother you but I opened the box and the running watch was smashed. I'd really appreciate a quick response.",
+        "Hey, I opened the box and the running watch was smashed. Please get back to me asap.",
+        "The running watch arrived damaged. I want a replacement, not a refund. Let me know.",
+        "Hi, I opened the box and the running watch was smashed. This is unacceptable for the price. I'd really appreciate a quick response."
+      ]
+    }
+  ]
+}

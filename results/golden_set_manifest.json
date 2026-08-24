@@ -1,0 +1,27 @@
+{
+  "seed": 20260824,
+  "n_rows": 400,
+  "n_intents": 16,
+  "allocation_rule": "floor of 15 per intent, remainder proportional to corpus traffic, target 400",
+  "per_intent_counts": {
+    "order_status": 33,
+    "delivery_delay": 30,
+    "refund_status": 30,
+    "return_request": 29,
+    "cancel_order": 28,
+    "wrong_item_received": 25,
+    "change_shipping_address": 25,
+    "exchange_item": 24,
+    "damaged_item": 24,
+    "missing_item": 23,
+    "account_login_issue": 22,
+    "change_payment_method": 22,
+    "discount_promo_code": 22,
+    "product_availability": 22,
+    "invoice_receipt_request": 21,
+    "subscription_manage": 20
+  },
+  "rows_where_discovery_disagrees": 158,
+  "sha256": "64999d88c5b18796edf87d4a3cf0faa531172c0d178604938b118002c23426a2",
+  "review_state": "pending"
+}

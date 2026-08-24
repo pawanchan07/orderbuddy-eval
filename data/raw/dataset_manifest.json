@@ -1,0 +1,28 @@
+{
+  "seed": 20260824,
+  "n_rows": 10000,
+  "n_intents": 16,
+  "intent_counts": {
+    "order_status": 1167,
+    "delivery_delay": 1005,
+    "refund_status": 910,
+    "return_request": 859,
+    "cancel_order": 787,
+    "wrong_item_received": 624,
+    "change_shipping_address": 606,
+    "damaged_item": 553,
+    "exchange_item": 540,
+    "missing_item": 503,
+    "account_login_issue": 456,
+    "discount_promo_code": 450,
+    "product_availability": 416,
+    "change_payment_method": 410,
+    "invoice_receipt_request": 402,
+    "subscription_manage": 312
+  },
+  "unique_texts": 9693,
+  "duplicate_rate": 0.0307,
+  "mean_char_len": 94.9,
+  "sha256": "a47faa633287854a6a4602f5facb4fd771eff815822bd51c5dbc3f0486c0d6d1",
+  "generator": "src/generate_dataset.py"
+}

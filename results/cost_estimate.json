@@ -1,0 +1,50 @@
+{
+  "estimate_date": "2026-08-24",
+  "PRICES_AS_OF": "2026-08-24",
+  "golden_set_rows": 400,
+  "input_tokens_measured_via": "messages.count_tokens (free endpoint)",
+  "output_token_assumptions": {
+    "claude-haiku-4-5": 90,
+    "claude-sonnet-5": 400,
+    "claude-opus-5": 500
+  },
+  "output_assumption_note": "Sonnet 5 and Opus 5 run adaptive thinking by default and thinking tokens bill as output; both are budgeted at 400-500 output tokens per call even at effort='low'. Haiku 4.5 has no adaptive thinking.",
+  "per_model": {
+    "claude-haiku-4-5": {
+      "tier": "budget",
+      "display_name": "Claude Haiku 4.5",
+      "rows": 400,
+      "mean_input_tokens_per_call": 848.6,
+      "assumed_output_tokens_per_call": 90,
+      "projected_input_tokens": 339446,
+      "projected_output_tokens": 36000,
+      "projected_cost_usd": 0.5194,
+      "projected_cost_usd_if_batched": 0.2597
+    },
+    "claude-sonnet-5": {
+      "tier": "mid",
+      "display_name": "Claude Sonnet 5",
+      "rows": 400,
+      "mean_input_tokens_per_call": 848.6,
+      "assumed_output_tokens_per_call": 400,
+      "projected_input_tokens": 339446,
+      "projected_output_tokens": 160000,
+      "projected_cost_usd": 2.2789,
+      "projected_cost_usd_if_batched": 1.1394
+    },
+    "claude-opus-5": {
+      "tier": "premium",
+      "display_name": "Claude Opus 5",
+      "rows": 400,
+      "mean_input_tokens_per_call": 848.6,
+      "assumed_output_tokens_per_call": 500,
+      "projected_input_tokens": 339446,
+      "projected_output_tokens": 200000,
+      "projected_cost_usd": 6.6972,
+      "projected_cost_usd_if_batched": 3.3486
+    }
+  },
+  "projected_total_usd": 9.4956,
+  "safety_multiplier": 2.0,
+  "budget_ceiling_usd": 18.99
+}

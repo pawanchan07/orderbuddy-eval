@@ -1,0 +1,37 @@
+{
+  "PRICES_AS_OF": "2026-08-24",
+  "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "currency": "USD",
+  "unit": "per million tokens",
+  "note": "First-party Claude API rates. Batch API is 50% of these on both input and output; cache reads are 0.1x base input. The bake-off runs synchronously without caching, so only base input/output rates apply.",
+  "models": {
+    "claude-haiku-4-5": {
+      "tier": "budget",
+      "display_name": "Claude Haiku 4.5",
+      "input": 1.0,
+      "output": 5.0,
+      "batch_input": 0.5,
+      "batch_output": 2.5,
+      "context_window": 200000
+    },
+    "claude-sonnet-5": {
+      "tier": "mid",
+      "display_name": "Claude Sonnet 5",
+      "input": 2.0,
+      "output": 10.0,
+      "batch_input": 1.0,
+      "batch_output": 5.0,
+      "context_window": 1000000,
+      "pricing_note": "The $2/$10 launch introductory rate became the standard price; the previously scheduled 2026-09-01 increase to $3/$15 was cancelled."
+    },
+    "claude-opus-5": {
+      "tier": "premium",
+      "display_name": "Claude Opus 5",
+      "input": 5.0,
+      "output": 25.0,
+      "batch_input": 2.5,
+      "batch_output": 12.5,
+      "context_window": 1000000
+    }
+  }
+}
