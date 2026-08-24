@@ -1,0 +1,134 @@
+{
+  "claude-haiku-4-5": {
+    "tier": "budget",
+    "model_version_string": "claude-haiku-4-5",
+    "full_set_v1": {
+      "n": 400,
+      "n_abstain": 5,
+      "n_wrong": 1,
+      "n_correct": 394,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0125,
+      "wrong_rate": 0.0025,
+      "accuracy": 0.985
+    },
+    "full_set_v2_composed": {
+      "n": 400,
+      "n_abstain": 5,
+      "n_wrong": 2,
+      "n_correct": 393,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0125,
+      "wrong_rate": 0.005,
+      "accuracy": 0.9825
+    },
+    "same_rows_v1": {
+      "n": 180,
+      "n_abstain": 1,
+      "n_wrong": 0,
+      "n_correct": 179,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0056,
+      "wrong_rate": 0.0,
+      "accuracy": 0.9944
+    },
+    "same_rows_v2": {
+      "n": 180,
+      "n_abstain": 1,
+      "n_wrong": 1,
+      "n_correct": 178,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0056,
+      "wrong_rate": 0.0056,
+      "accuracy": 0.9889
+    }
+  },
+  "claude-sonnet-5": {
+    "tier": "mid",
+    "model_version_string": "claude-sonnet-5",
+    "full_set_v1": {
+      "n": 400,
+      "n_abstain": 2,
+      "n_wrong": 3,
+      "n_correct": 395,
+      "n_unparseable": 0,
+      "abstain_rate": 0.005,
+      "wrong_rate": 0.0075,
+      "accuracy": 0.9875
+    },
+    "full_set_v2_composed": {
+      "n": 400,
+      "n_abstain": 2,
+      "n_wrong": 4,
+      "n_correct": 394,
+      "n_unparseable": 0,
+      "abstain_rate": 0.005,
+      "wrong_rate": 0.01,
+      "accuracy": 0.985
+    },
+    "same_rows_v1": {
+      "n": 180,
+      "n_abstain": 0,
+      "n_wrong": 0,
+      "n_correct": 180,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0,
+      "wrong_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "same_rows_v2": {
+      "n": 180,
+      "n_abstain": 0,
+      "n_wrong": 1,
+      "n_correct": 179,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0,
+      "wrong_rate": 0.0056,
+      "accuracy": 0.9944
+    }
+  },
+  "claude-opus-5": {
+    "tier": "premium",
+    "model_version_string": "claude-opus-5",
+    "full_set_v1": {
+      "n": 400,
+      "n_abstain": 5,
+      "n_wrong": 0,
+      "n_correct": 395,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0125,
+      "wrong_rate": 0.0,
+      "accuracy": 0.9875
+    },
+    "full_set_v2_composed": {
+      "n": 400,
+      "n_abstain": 6,
+      "n_wrong": 0,
+      "n_correct": 394,
+      "n_unparseable": 0,
+      "abstain_rate": 0.015,
+      "wrong_rate": 0.0,
+      "accuracy": 0.985
+    },
+    "same_rows_v1": {
+      "n": 180,
+      "n_abstain": 0,
+      "n_wrong": 0,
+      "n_correct": 180,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0,
+      "wrong_rate": 0.0,
+      "accuracy": 1.0
+    },
+    "same_rows_v2": {
+      "n": 180,
+      "n_abstain": 1,
+      "n_wrong": 0,
+      "n_correct": 179,
+      "n_unparseable": 0,
+      "abstain_rate": 0.0056,
+      "wrong_rate": 0.0,
+      "accuracy": 0.9944
+    }
+  }
+}

@@ -39,3 +39,23 @@ v2 adds one sentence to the prompt stating that the "never repeat identifiers" r
 ### How the full-set v2 figure is composed
 
 The v2 run covered 180 of 400 rows: all 80 treatment rows plus the 100-row control. The remaining 220 rows carry their v1 result forward. This is sound for the safety figure because A2 cannot fire on a message containing no identifier, and the v1 run confirmed it empirically — zero A2 failures outside the treatment group across all three tiers. The control group tests the other direction and its delta is reported above. Where a directly-measured number is preferred to a composed one, cite the treatment-group table.
+
+## Abstention rates
+
+Derived from the logged calls (`results/raw_calls*.jsonl`) with no further API spend. An abstention is counted **only** when the model returned the explicit `abstain` label. Abstentions are never merged into wrong answers; correct + wrong + abstained = 100% in every row.
+
+| Tier | Model version | Abstention rate (v2, final) | Abstention rate (v1) | Abstentions v2 | Abstentions v1 |
+|---|---|---:|---:|---:|---:|
+| budget | `claude-haiku-4-5` | 1.2% | 1.2% | 5/400 | 5/400 |
+| mid | `claude-sonnet-5` | 0.5% | 0.5% | 2/400 | 2/400 |
+| premium | `claude-opus-5` | 1.5% | 1.2% | 6/400 | 5/400 |
+
+Full-set v2 is the composed final configuration (v2 where measured on 180 rows, v1 carried forward on 220). For a like-for-like read of what the prompt change did to abstention behaviour, compare only the rows actually re-run:
+
+| Tier | Model version | Abstentions v1 (same 180 rows) | Abstentions v2 (same 180 rows) | Change |
+|---|---|---:|---:|---:|
+| budget | `claude-haiku-4-5` | 1/180 (0.6%) | 1/180 (0.6%) | +0 |
+| mid | `claude-sonnet-5` | 0/180 (0.0%) | 0/180 (0.0%) | +0 |
+| premium | `claude-opus-5` | 0/180 (0.0%) | 1/180 (0.6%) | +1 |
+
+Unparseable responses across every tier and both prompt versions: **0**. Structured outputs were used throughout, so no response had to be discarded or guessed at, and none was counted as an abstention.
