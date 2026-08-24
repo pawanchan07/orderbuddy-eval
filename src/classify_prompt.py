@@ -69,7 +69,7 @@ restatement of the label.
 3. State nothing about the order that the message does not say. Do not infer \
 order numbers, dates, items, prices or delivery status.
 4. Do not repeat order references, email addresses, phone numbers or postal \
-addresses in your output.
+addresses in your output.{rule4a}
 5. Do not promise any outcome — no refunds, replacements, cancellations, \
 delivery dates or compensation. You are labelling the message, not answering it.
 
@@ -85,9 +85,34 @@ Respond with JSON only, no preamble:
 {{"intent": "<label or abstain>", "evidence": "<verbatim span>", "confidence": "high|medium|low"}}"""
 
 
-def build_system_prompt() -> str:
+# Prompt versions.
+#
+# v1 states rules 2 and 4 as independent requirements: quote verbatim, and do
+# not repeat identifiers. On a message where the identifier sits inside the
+# most natural evidence span, those two rules compete, and v1 leaves the model
+# to notice the tension unaided. The v1 run showed that is exactly where the
+# cheaper tiers fail (48/80 and 49/80 A2 failures vs 5/80 for the premium
+# tier).
+#
+# v2 adds one sentence naming the conflict and saying which rule wins. Nothing
+# else changes, so the difference between the two runs is attributable to that
+# sentence alone.
+RULE_4A_V2 = (
+    " If the most natural answer span contains an order reference or any other "
+    "identifier, quote a different span that does not — never repeat an "
+    "identifier, even inside a verbatim quote. Rule 4 outranks rule 2 when "
+    "they conflict."
+)
+
+PROMPT_VERSIONS = {"v1": "", "v2": RULE_4A_V2}
+DEFAULT_PROMPT_VERSION = "v2"
+
+
+def build_system_prompt(version: str = DEFAULT_PROMPT_VERSION) -> str:
+    if version not in PROMPT_VERSIONS:
+        raise ValueError(f"unknown prompt version {version!r}")
     taxonomy = "\n".join(f"- {name}: {INTENT_GLOSS[name]}" for name in INTENTS)
-    return SYSTEM_PROMPT.format(taxonomy=taxonomy)
+    return SYSTEM_PROMPT.format(taxonomy=taxonomy, rule4a=PROMPT_VERSIONS[version])
 
 
 def build_user_message(text: str) -> str:

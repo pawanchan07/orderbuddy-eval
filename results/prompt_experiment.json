@@ -1,0 +1,186 @@
+{
+  "run_date": "2026-08-25",
+  "run_started_utc": "2026-08-24T19:16:20+00:00",
+  "run_finished_utc": "2026-08-24T19:37:22+00:00",
+  "PRICES_AS_OF": "2026-08-24",
+  "api_path": "batch",
+  "hypothesis": "The v1 A2 gap between tiers is an unstated-precedence problem, not a capability gap: v1 gives 'quote verbatim' and 'never repeat identifiers' as independent rules without saying which wins.",
+  "change": "v2 appends one sentence to rule 4 naming the conflict and stating that rule 4 outranks rule 2. No other change.",
+  "groups": {
+    "treatment": "80 rows whose message contains an identifier (complete set where A2 can fire)",
+    "control": "100 sampled rows without an identifier (regression check only)"
+  },
+  "total_experiment_cost_usd": 1.097,
+  "results": {
+    "claude-haiku-4-5": {
+      "tier": "budget",
+      "treatment": {
+        "v1": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 0.4,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.4,
+          "a2_failures": 48,
+          "gate_failure_counts": {
+            "A2": 48
+          }
+        },
+        "v2": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 0.9375,
+          "groundedness_pass_rate": 0.8625,
+          "clean_correct_rate": 0.8,
+          "a2_failures": 5,
+          "gate_failure_counts": {
+            "A2": 5,
+            "B1": 11
+          }
+        }
+      },
+      "control": {
+        "v1": {
+          "n": 100,
+          "accuracy": 0.99,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.01,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.99,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        },
+        "v2": {
+          "n": 100,
+          "accuracy": 0.98,
+          "wrong_rate": 0.01,
+          "abstain_rate": 0.01,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.98,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        }
+      },
+      "experiment_cost_usd": 0.1082,
+      "batch_id": "msgbatch_016ENDZcm9mUcxUvLFemqonE"
+    },
+    "claude-sonnet-5": {
+      "tier": "mid",
+      "treatment": {
+        "v1": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 0.3875,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.3875,
+          "a2_failures": 49,
+          "gate_failure_counts": {
+            "A2": 49
+          }
+        },
+        "v2": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 0.95,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.95,
+          "a2_failures": 4,
+          "gate_failure_counts": {
+            "A2": 4
+          }
+        }
+      },
+      "control": {
+        "v1": {
+          "n": 100,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 1.0,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        },
+        "v2": {
+          "n": 100,
+          "accuracy": 0.99,
+          "wrong_rate": 0.01,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.99,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        }
+      },
+      "experiment_cost_usd": 0.2813,
+      "batch_id": "msgbatch_01XmumE4dr3BA9CuNkpFnk4x"
+    },
+    "claude-opus-5": {
+      "tier": "premium",
+      "treatment": {
+        "v1": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 0.9375,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.9375,
+          "a2_failures": 5,
+          "gate_failure_counts": {
+            "A2": 5
+          }
+        },
+        "v2": {
+          "n": 80,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 1.0,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        }
+      },
+      "control": {
+        "v1": {
+          "n": 100,
+          "accuracy": 1.0,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.0,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 1.0,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        },
+        "v2": {
+          "n": 100,
+          "accuracy": 0.99,
+          "wrong_rate": 0.0,
+          "abstain_rate": 0.01,
+          "safety_pass_rate": 1.0,
+          "groundedness_pass_rate": 1.0,
+          "clean_correct_rate": 0.99,
+          "a2_failures": 0,
+          "gate_failure_counts": {}
+        }
+      },
+      "experiment_cost_usd": 0.7075,
+      "batch_id": "msgbatch_01VgPJm4rVNNH1bsCRjsFEXM"
+    }
+  }
+}

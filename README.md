@@ -307,11 +307,24 @@ fidelity and would bite harder on a longer prompt.
 
 Full numbers in `results/summary_table.md`. The headline:
 
+**Final (v2 prompt)** — the table for the website widget, also in
+`results/final_summary.md`:
+
+| Tier | Model version | Accuracy | Abstained | Clean & correct | Cost / 1,000 |
+|---|---|---:|---:|---:|---:|
+| budget | `claude-haiku-4-5` | 98.2% | 1.2% | 94.0% | $0.590 |
+| mid | `claude-sonnet-5` | 98.5% | 0.5% | 97.5% | $1.534 |
+| premium | `claude-opus-5` | 98.5% | 1.5% | **98.5%** | $3.868 |
+
+Run date 2026-08-25 · PRICES_AS_OF 2026-08-24 · Batch API · 400-row golden set.
+
+**Initial (v1 prompt)**, kept for the before/after:
+
 | Tier | Model | Correct | Wrong | Abstained | Safety | Groundedness | Clean & correct | Cost / 1k |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
 | budget | `claude-haiku-4-5` | 98.5% | 0.2% | 1.2% | 88.0% | 99.8% | 86.2% | $0.581 |
 | mid | `claude-sonnet-5` | 98.8% | 0.8% | 0.5% | 87.8% | 100.0% | 86.5% | $1.505 |
-| premium | `claude-opus-5` | 98.8% | 0.0% | 1.2% | 98.8% | 100.0% | **97.5%** | $3.794 |
+| premium | `claude-opus-5` | 98.8% | 0.0% | 1.2% | 98.8% | 100.0% | 97.5% | $3.794 |
 
 **Accuracy does not separate these tiers.** All three land within 0.3 points
 of each other, and on a 400-row set that difference is noise. If accuracy were
@@ -333,16 +346,68 @@ Whether that is worth 6.5× the cost is a deployment decision, and it depends
 entirely on whether those identifiers flow anywhere that matters. Two things
 worth noting before treating the gap as settled:
 
-- A prompt revision (an explicit "if the natural span contains an order
-  reference, quote a different part of the message") might close most of the
-  gap on the cheaper tiers. That is untested here, and it is the first thing
-  worth trying before paying for the premium tier.
+- A prompt revision might close most of the gap on the cheaper tiers. **This
+  was subsequently tested — see "The A2 prompt experiment" below. It largely
+  worked, and it changes the recommendation.**
 - This is one run of one prompt with no repeated sampling, so there are no
   confidence intervals. The 10× gap in A2 failures is large enough to be
   real; the 0.3-point accuracy spread is not.
 
-**Groundedness was near-saturated** (99.8–100%), so it did not discriminate.
-A single Haiku response quoted a span that did not appear in the source.
+**Groundedness was near-saturated under v1** (99.8–100%), so it did not
+discriminate there. It became the decisive gate under v2 — see below.
+
+---
+
+## The A2 prompt experiment
+
+`src/run_prompt_experiment.py`. The v1 gap looked like an unstated-precedence
+problem rather than a capability gap: v1 gives "quote verbatim" (rule 2) and
+"never repeat identifiers" (rule 4) as independent requirements and leaves the
+model to notice they collide. **v2 adds one sentence** saying rule 4 outranks
+rule 2 when they conflict. Nothing else changes, and v1 is byte-identical to
+the original run's prompt, so any delta is attributable to that sentence.
+
+**Scope.** Treatment = all 80 golden rows whose message contains an
+identifier. This is the complete population where A2 can fire, not a sample:
+the v1 run had zero A2 failures outside it across all three tiers. Control =
+100 sampled rows without identifiers, to detect whether the added sentence
+degrades accuracy where it was not aimed. Cost: $1.10.
+
+| Tier | A2 fails v1 → v2 | Safety v1 → v2 | Groundedness v2 | Clean & correct v1 → v2 |
+|---|---:|---:|---:|---:|
+| budget | 48/80 → **5/80** | 40.0% → 93.8% | 69/80 | 40.0% → **80.0%** |
+| mid | 49/80 → **4/80** | 38.8% → 95.0% | 80/80 | 38.8% → **95.0%** |
+| premium | 5/80 → **0/80** | 93.8% → 100.0% | 80/80 | 93.8% → **100.0%** |
+
+Control accuracy moved −1.0 point on every tier — one row each. That is noise,
+not a regression.
+
+### The hypothesis held, but not the whole way
+
+On safety alone the fix is decisive. Haiku's A2 failures drop 48 → 5, landing
+exactly on Opus's *v1* score. One sentence recovered nearly the entire gap at
+a sixth of the cost, which means the v1 result was **not** measuring a
+capability difference — it was measuring which model noticed an ambiguity in
+the prompt that should not have been there.
+
+**But the budget tier does not reach parity on clean & correct, because it
+satisfies the new rule the wrong way.** Haiku *rewrites the quote* to remove
+the identifier — emitting `"wrong address on my order, can you fix it?"` where
+the message read `"wrong address on 32435772, can you fix it?"`. That is a
+verbatim span which is not verbatim. It trades 43 safety failures for 11
+groundedness failures. Sonnet and Opus do what was asked and select a
+different genuine span: zero groundedness failures.
+
+So the residual gap is no longer about *spotting* the conflict — all three
+tiers now spot it — but about *resolving it without fabricating*.
+
+### What this says about the gates
+
+Scoring safety alone would have declared the budget tier fixed. It is the
+second gate that catches a model paying for one rule with another. Two cheap
+mechanical checks that constrain each other found something neither would have
+found alone, which is a stronger argument for deterministic gates than any of
+the individual pass rates.
 
 ---
 

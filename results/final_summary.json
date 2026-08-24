@@ -1,0 +1,115 @@
+{
+  "run_date": "2026-08-25",
+  "PRICES_AS_OF": "2026-08-24",
+  "prompt_version": "v2",
+  "api_path": "batch",
+  "golden_set_rows": 400,
+  "composition_note": "v2 measured on 180/400 rows (80 treatment + 100 control); remaining 220 carry v1 results forward. A2 cannot fire on rows without an identifier, verified empirically in the v1 run.",
+  "tiers": {
+    "claude-haiku-4-5": {
+      "tier": "budget",
+      "display_name": "Claude Haiku 4.5",
+      "model_version_string": "claude-haiku-4-5",
+      "n_rows": 400,
+      "n_rows_measured_under_v2": 180,
+      "accuracy": 0.9825,
+      "wrong_rate": 0.005,
+      "abstain_rate": 0.0125,
+      "safety_pass_rate": 0.9875,
+      "groundedness_pass_rate": 0.97,
+      "clean_correct_rate": 0.94,
+      "clean_correct_rate_v1": 0.8625,
+      "tokens": {
+        "input": 405997,
+        "output": 13161
+      },
+      "cost_per_1000_usd": 0.5898,
+      "cost_per_1000_usd_sync": 1.1795,
+      "treatment_group": {
+        "n": 80,
+        "a2_failures_v1": 48,
+        "a2_failures_v2": 5,
+        "safety_v1": 0.4,
+        "safety_v2": 0.9375,
+        "clean_correct_v1": 0.4,
+        "clean_correct_v2": 0.8
+      },
+      "control_group": {
+        "n": 100,
+        "accuracy_v1": 0.99,
+        "accuracy_v2": 0.98,
+        "accuracy_delta": -0.01
+      }
+    },
+    "claude-sonnet-5": {
+      "tier": "mid",
+      "display_name": "Claude Sonnet 5",
+      "model_version_string": "claude-sonnet-5",
+      "n_rows": 400,
+      "n_rows_measured_under_v2": 180,
+      "accuracy": 0.985,
+      "wrong_rate": 0.01,
+      "abstain_rate": 0.005,
+      "safety_pass_rate": 0.99,
+      "groundedness_pass_rate": 1.0,
+      "clean_correct_rate": 0.975,
+      "clean_correct_rate_v1": 0.865,
+      "tokens": {
+        "input": 525513,
+        "output": 17626
+      },
+      "cost_per_1000_usd": 1.5341,
+      "cost_per_1000_usd_sync": 3.0682,
+      "treatment_group": {
+        "n": 80,
+        "a2_failures_v1": 49,
+        "a2_failures_v2": 4,
+        "safety_v1": 0.3875,
+        "safety_v2": 0.95,
+        "clean_correct_v1": 0.3875,
+        "clean_correct_v2": 0.95
+      },
+      "control_group": {
+        "n": 100,
+        "accuracy_v1": 1.0,
+        "accuracy_v2": 0.99,
+        "accuracy_delta": -0.01
+      }
+    },
+    "claude-opus-5": {
+      "tier": "premium",
+      "display_name": "Claude Opus 5",
+      "model_version_string": "claude-opus-5",
+      "n_rows": 400,
+      "n_rows_measured_under_v2": 180,
+      "accuracy": 0.985,
+      "wrong_rate": 0.0,
+      "abstain_rate": 0.015,
+      "safety_pass_rate": 1.0,
+      "groundedness_pass_rate": 1.0,
+      "clean_correct_rate": 0.985,
+      "clean_correct_rate_v1": 0.975,
+      "tokens": {
+        "input": 525513,
+        "output": 18662
+      },
+      "cost_per_1000_usd": 3.8676,
+      "cost_per_1000_usd_sync": 7.7353,
+      "treatment_group": {
+        "n": 80,
+        "a2_failures_v1": 5,
+        "a2_failures_v2": 0,
+        "safety_v1": 0.9375,
+        "safety_v2": 1.0,
+        "clean_correct_v1": 0.9375,
+        "clean_correct_v2": 1.0
+      },
+      "control_group": {
+        "n": 100,
+        "accuracy_v1": 1.0,
+        "accuracy_v2": 0.99,
+        "accuracy_delta": -0.01
+      }
+    }
+  }
+}
