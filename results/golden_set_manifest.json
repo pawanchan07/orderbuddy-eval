@@ -23,5 +23,9 @@
   },
   "rows_where_discovery_disagrees": 158,
   "sha256": "64999d88c5b18796edf87d4a3cf0faa531172c0d178604938b118002c23426a2",
-  "review_state": "pending"
+  "review_state": "confirmed",
+  "review_date": "2026-08-25",
+  "review_method": "stratified 40-row spot-check reviewed by repo owner: 20 rows where unsupervised discovery disagreed with the label + 20 rows spread across all 16 intents. Approved as shown, zero corrections. Recorded as a sample-based review pass over all 400 rows, not a full read of every label.",
+  "corrections_made": 0,
+  "sha256_after_review": "9829c8ab9a44ff8a963b163e053697702f85ccb77890223f140ff559d23c589a"
 }
