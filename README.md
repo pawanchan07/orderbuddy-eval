@@ -1,9 +1,18 @@
 # OrderBuddy evaluation pipeline
 
+**By [Pawanchander Komuravelli](https://pawanchander.com) — Product Manager &
+Builder.** Evidence before roadmap. Evals before demos.
+
 A reproducible, end-to-end evaluation of intent classification for an orders
 customer-support domain. Every stage is a committed script, every result is a
 committed file, and every number in the summary is traceable to the run that
 produced it.
+
+This repo exists to show the working, not just the conclusion. That includes
+the parts that did not go my way: a benchmark result well below what I had
+previously claimed, a budget-guard estimate that missed in both directions,
+and two bugs I found in my own scoring code. They are all documented below
+rather than quietly fixed, because an eval you can't audit is a demo.
 
 The pipeline does three separable things:
 
