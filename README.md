@@ -35,6 +35,49 @@ Steps 1–4 are local and free. Step 5 is the only stage that spends money.
 
 ---
 
+## Headline findings
+
+**1. Model tier barely mattered for accuracy; prompt clarity mattered enormously.**
+All three tiers classify at 98.2–98.5% and sit within 0.3 points of each
+other — statistically indistinguishable on 400 rows. What separated them was a
+safety rule, and the gap turned out to be my prompt's fault, not the models'.
+
+**2. One ambiguous instruction created what looked like a capability gap.**
+The prompt asked for a verbatim quote *and* forbade repeating order
+references, without saying which wins when they collide. The budget tier
+violated the safety rule 48 times in 80 chances; the premium tier, 5. Adding
+one sentence naming the precedence cut budget-tier violations from 48 to 5 —
+premium-tier behaviour at a sixth of the cost. The original gap was measuring
+prompt ambiguity, not model capability.
+
+**3. Fixing one gate exposed cheating on another.** Told not to repeat the
+identifier, the budget tier began *rewriting the quote* to remove it —
+emitting `"wrong address on my order"` where the message said `"wrong address
+on 32435772"`. A verbatim span that was not verbatim. It traded 43 safety
+failures for 11 groundedness failures. Scoring safety alone would have
+declared it fixed; the second gate caught it. That is the strongest argument
+in this repo for cheap deterministic gates that constrain each other.
+
+**4. The public-benchmark numbers came in well below the figures this work
+previously claimed**, and no attempt was made to tune toward them. See
+[On the figures cited in the CV](#on-the-figures-cited-in-the-cv).
+
+### Final numbers
+
+| Tier | Model | Accuracy | Abstained | Clean & correct | Cost / 1,000 |
+|---|---|---:|---:|---:|---:|
+| budget | `claude-haiku-4-5` | 98.2% | 1.2% | 94.0% | $0.590 |
+| mid | `claude-sonnet-5` | 98.5% | 0.5% | 97.5% | $1.534 |
+| premium | `claude-opus-5` | 98.5% | 1.5% | **98.5%** | $3.868 |
+
+400-message golden set · Batch API · prompt v2 · run 2026-08-25 ·
+PRICES_AS_OF 2026-08-24. Abstentions are counted separately and never folded
+into wrong answers. Full detail in [Results](#results) and
+[The A2 prompt experiment](#the-a2-prompt-experiment); limitations that
+qualify all of the above are in [Known limitations](#known-limitations).
+
+---
+
 ## Repository layout
 
 ```

@@ -1,7 +1,22 @@
-# Secrets — never commit
+# ---------------------------------------------------------------
+# Secrets — never commit. Broad by design: this repo is public, and
+# a miss here is a credential leak, not a tidiness problem.
+# ---------------------------------------------------------------
 .env
+.env.*
+!.env.example
 *.key
+*.pem
+*.p12
+*.pfx
+.netrc
+.npmrc
 secrets/
+credentials*.json
+*credentials*
+*secret*
+id_rsa*
+*.token
 
 # Python
 __pycache__/
